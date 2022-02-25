@@ -127,13 +127,16 @@ def err():
 def get_input(): #defining a listening function
     
     if pref_input != True:
-        r = sr.Recognizer()
-        with sr.Microphone() as source:
-            r.adjust_for_ambient_noise(source) #this line is for noise cancelation according to linrary manual
-            r.pause_threshold = 1 #user max pause time
-            print('\nListning...')
-            audio = r.listen(source)
-            said=''
+        try:
+            r = sr.Recognizer()
+            with sr.Microphone() as source:
+                r.adjust_for_ambient_noise(source) #this line is for noise cancelation according to linrary manual
+                r.pause_threshold = 1 #user max pause time
+                print('\nListning...')
+                audio = r.listen(source)
+                said=''
+        except:
+            print('\nNo Microphone Found!')
         try:    #using try and except to avoid any error
             print('\nRecognizing...')
             said = r.recognize_google(audio, language='en')
@@ -324,12 +327,12 @@ while True:
                         speak('Done!')
                 
 
-            QUES_STRS = ['search','find','what ','who','which','wiki','on internet','google','how']
+            QUES_STRS = ['search','find','what ','who','which','wiki','on internet','google','how','why']
             for j in QUES_STRS: #identifing the words in string to perform tasks
                 if j in query:
                     temp_query = query.replace('search ','').replace('find me ','').replace('find ','').replace(' on internet','')
                     
-                    SRCH_ENG =['google','on amazon','on youtube']
+                    SRCH_ENG =['google','on amazon','on youtube','why']
                     for k in SRCH_ENG: #identifing the words in string to perform tasks
                         if k in temp_query:
                             if 'on amazon' in temp_query:
@@ -392,7 +395,7 @@ while True:
 
                                 elif temp_query.find('you') == -1:
                                     try:
-                                        speak(random.choice(PHRASES['s_wiki']))
+                                        print('\n'+random.choice(PHRASES['s_wiki']))
                                         results = wikipedia.summary(temp_query,sentences=2)
                                         speak(results)
                                     except Exception as e:
